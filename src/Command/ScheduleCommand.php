@@ -26,6 +26,7 @@ class ScheduleCommand extends Command
      * ScheduleCommand constructor.
      * @param ManagerRegistry $managerRegistry
      * @param iterable $schedulers
+     * @param iterable $cronCommands
      */
     public function __construct(ManagerRegistry $managerRegistry, iterable $schedulers, iterable $cronCommands)
     {
@@ -44,9 +45,17 @@ class ScheduleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $jobSchedulers = $this->populateJobSchedulers();
+
+        foreach ($jobSchedulers as $jobScheduler) {
+            $output->write($jobScheduler->getCommands());
+        }
+
         return 0;
     }
 
+    /**
+     * @return JobScheduler[]
+     */
     private function populateJobSchedulers()
     {
         $schedulers = [];
