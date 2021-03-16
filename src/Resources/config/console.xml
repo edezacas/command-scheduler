@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <defaults public="false" />
+
+        <service id="edc_job_queue.command.run" class="EDC\CommandSchedulerBundle\Command\RunCommand">
+            <tag name="console.command" />
+        </service>
+
+        <service id="edc_job_queue.command.schedule" class="EDC\CommandSchedulerBundle\Command\ScheduleCommand">
+            <tag name="console.command" />
+            <argument type="service" id="doctrine" />
+            <argument type="tagged" tag="edc_job_queue.scheduler" />
+            <argument type="tagged" tag="edc_job_queue.cron_command" />
+        </service>
+    </services>
+</container>

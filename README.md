@@ -1,1 +1,1 @@
-# symfony-command-scheduler
+# edc/command-scheduler
