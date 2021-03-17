@@ -25,14 +25,14 @@ class EDCCommandSchedulerExtension extends Extension implements PrependExtension
                 $container,
                 new FileLocator(__DIR__.'/../Resources/config')
             );
-
+            $loader->load('services.xml');
             $loader->load('console.xml');
 
             $container->registerForAutoconfiguration(JobScheduler::class)
-                ->addTag('edc_job_queue.scheduler');
+                ->addTag('edc_command_scheduler.scheduler');
 
             $container->registerForAutoconfiguration(CronCommand::class)
-                ->addTag('edc_job_queue.cron_command');
+                ->addTag('edc_command_scheduler.cron_command');
         }
     }
 

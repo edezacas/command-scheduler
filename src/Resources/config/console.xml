@@ -7,15 +7,16 @@
     <services>
         <defaults public="false" />
 
-        <service id="edc_job_queue.command.run" class="EDC\CommandSchedulerBundle\Command\RunCommand">
+        <service id="edc_command_scheduler.command.run" class="EDC\CommandSchedulerBundle\Command\RunCommand">
             <tag name="console.command" />
+            <argument type="service" id="edc_command_scheduler.service.job_manager" />
         </service>
 
-        <service id="edc_job_queue.command.schedule" class="EDC\CommandSchedulerBundle\Command\ScheduleCommand">
+        <service id="edc_command_scheduler.command.schedule" class="EDC\CommandSchedulerBundle\Command\ScheduleCommand">
             <tag name="console.command" />
             <argument type="service" id="doctrine" />
-            <argument type="tagged" tag="edc_job_queue.scheduler" />
-            <argument type="tagged" tag="edc_job_queue.cron_command" />
+            <argument type="tagged" tag="edc_command_scheduler.scheduler" />
+            <argument type="tagged" tag="edc_command_scheduler.cron_command" />
         </service>
     </services>
 </container>

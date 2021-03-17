@@ -17,6 +17,8 @@ use Symfony\Component\ErrorHandler\Exception\FlattenException;
  */
 class Job
 {
+    const ALIAS = 'j';
+
     /** State if job is inserted, but not yet ready to be started. */
     const STATE_NEW = 'new';
 
@@ -135,6 +137,12 @@ class Job
      * @ORM\Column(type = "smallint", name="maxRetries", options = {"unsigned": true})
      */
     private $maxRetries = 0;
+
+    /**
+     * @var int|null
+     * @ORM\Column(type = "smallint", nullable = true, options = {"unsigned": true})
+     */
+    private $runtime;
 
     /**
      * @var int|null
@@ -327,6 +335,22 @@ class Job
     public function getStackTrace()
     {
         return $this->stackTrace;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getRuntime(): ?int
+    {
+        return $this->runtime;
+    }
+
+    /**
+     * @param int|null $runtime
+     */
+    public function setRuntime(?int $runtime): void
+    {
+        $this->runtime = $runtime;
     }
 
     /**

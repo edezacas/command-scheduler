@@ -7,4 +7,4 @@ services:
 
     EDC\CommandSchedulerBundle\Tests\Command\TestCommandScheduler:
         tags:
-            - { name: edc_job_queue.scheduler }
+            - { name: edc_command_scheduler.scheduler }

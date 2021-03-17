@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ScheduleCommand extends Command
 {
-    protected static $defaultName = 'edc-job-queue:schedule';
+    protected static $defaultName = 'edc-command:schedule';
 
     /** @var ManagerRegistry */
     private $registry;
