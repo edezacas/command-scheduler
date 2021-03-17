@@ -4,8 +4,8 @@
 namespace EDC\CommandSchedulerBundle\Command;
 
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use EDC\CommandSchedulerBundle\Cron\CommandScheduler;
@@ -74,7 +74,7 @@ class ScheduleCommand extends Command
      * @param JobScheduler[] $jobSchedulers
      * @param \DateTime[] $jobsLastRunAt
      */
-    private function scheduleJobs(OutputInterface $output, array $jobSchedulers, array &$jobsLastRunAt)
+    private function scheduleJobs(OutputInterface $output, array $jobSchedulers, array $jobsLastRunAt)
     {
         foreach ($jobSchedulers as $name => $scheduler) {
             $lastRunAt = $jobsLastRunAt[$name];
@@ -83,10 +83,9 @@ class ScheduleCommand extends Command
                 continue;
             }
 
-            list($success, $newLastRunAt) = $this->acquireLock($name, $lastRunAt);
-            $jobsLastRunAt[$name] = $newLastRunAt;
+            $updatedJobs = $this->updateLastRunAt($name, $lastRunAt);
 
-            if ($success) {
+            if ($updatedJobs) {
                 $output->writeln('Scheduling command '.$name);
                 $job = $scheduler->createJob($name, $lastRunAt);
                 $em = $this->registry->getManagerForClass(Job::class);
@@ -96,13 +95,14 @@ class ScheduleCommand extends Command
         }
     }
 
-    private function acquireLock($commandName, \DateTime $lastRunAt)
+    private function updateLastRunAt($commandName, \DateTime $lastRunAt): bool
     {
         /** @var EntityManagerInterface $em */
         $em = $this->registry->getManagerForClass(CronJob::class);
         $con = $em->getConnection();
 
         $now = new \DateTime();
+
         $affectedRows = $con->executeStatement(
             "UPDATE edc_cron_jobs SET lastRunAt = :now WHERE command = :command AND lastRunAt = :lastRunAt",
             array(
@@ -111,22 +111,12 @@ class ScheduleCommand extends Command
                 'lastRunAt' => $lastRunAt,
             ),
             array(
-                'now' => 'datetime',
-                'lastRunAt' => 'datetime',
+                'now' => Types::DATETIME_MUTABLE,
+                'lastRunAt' => Types::DATETIME_MUTABLE,
             )
         );
 
-        if ($affectedRows > 0) {
-            return array(true, $now);
-        }
-
-        /** @var CronJob $cronJob */
-        $cronJob = $em->createQuery("SELECT j FROM ".CronJob::class." j WHERE j.command = :command")
-            ->setParameter('command', $commandName)
-            ->setHint(Query::HINT_REFRESH, true)
-            ->getSingleResult();
-
-        return array(false, $cronJob->getLastRunAt());
+        return $affectedRows > 0;
     }
 
     /**
