@@ -417,6 +417,21 @@ class Job
         $this->stackTrace = $exception;
     }
 
+    public function addOutput($output)
+    {
+        $this->output .= $output;
+    }
+
+    public function addErrorOutput($output)
+    {
+        $this->errorOutput .= $output;
+    }
+
+    public function checked()
+    {
+        $this->checkedAt = new \DateTime();
+    }
+
     public function isNew()
     {
         return self::STATE_NEW === $this->state;

@@ -10,7 +10,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
 class RunCommand extends Command
 {
@@ -79,15 +78,21 @@ class RunCommand extends Command
 
         $this->jobManager->getJobManager()->getConnection()->getConfiguration()->setSQLLogger(null);
 
+
         while (true) {
             if ($this->finishRun || time() - $startTime > $maxRuntime) {
+                $this->output->write("MAMMAMAMAMAMA");
                 break;
             }
 
-            $this->checkRunningJobs();
-
             $this->runJobs($maxJobs);
+
+            $this->checkRunningJobs();
         }
+
+        $this->output->write("PEPEOEOEEOEOOEO");
+
+        return 0;
     }
 
     private function runJobs($maxJobs)
@@ -96,10 +101,10 @@ class RunCommand extends Command
             $job = $this->jobManager->findPendingJob();
 
             if (is_null($job)) {
-                $this->finishRun = true;
-            } else {
-                $this->startJob($job);
+                return;
             }
+
+            $this->startJob($job);
         }
     }
 
@@ -186,6 +191,10 @@ class RunCommand extends Command
             $newState = 0 === $data['process']->getExitCode() ? Job::STATE_FINISHED : Job::STATE_FAILED;
             $this->jobManager->closeJob($data['job'], $newState);
             unset($this->runningJobs[$i]);
+        }
+
+        if (empty($this->runningJobs)) {
+            $this->finishRun = true;
         }
     }
 

@@ -6,6 +6,7 @@ namespace EDC\CommandSchedulerBundle\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use EDC\CommandSchedulerBundle\Command\RunCommand;
 use EDC\CommandSchedulerBundle\Command\ScheduleCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -34,6 +35,19 @@ abstract class BaseTest extends KernelTestCase
         $command = $application->find(ScheduleCommand::getDefaultName());
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
+
+        // the output of the command in the console
+        return $commandTester->getDisplay();
+    }
+
+    public function executeRunnerTest()
+    {
+        $kernel = static::createKernel();
+        $application = new Application($kernel);
+
+        $command = $application->find(RunCommand::getDefaultName());
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--verbose']);
 
         // the output of the command in the console
         return $commandTester->getDisplay();

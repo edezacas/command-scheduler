@@ -116,7 +116,7 @@ class JobManager
             $this->updateJobState($job, $finalState);
             $this->getJobManager()->persist($job);
             $this->getJobManager()->flush();
-            $this->getJobManager()->clear($job);
+            $this->getJobManager()->clear(Job::class);
         } catch (\Exception $ex) {
             $this->getJobManager()->getConnection()->rollback();
 
