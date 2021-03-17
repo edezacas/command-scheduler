@@ -33,7 +33,7 @@ class TestCommand extends Command
             ]
         );
 
-        //sleep(1);
+        sleep(1);
 
         $dateTimeEnd = new \DateTime();
 

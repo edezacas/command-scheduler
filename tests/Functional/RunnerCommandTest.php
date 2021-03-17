@@ -17,6 +17,8 @@ class RunnerCommandTest extends BaseTest
         $this->getEm()->persist($testJob);
         $this->getEm()->flush();
 
+        $this->assertNotNull($testJob);
+        $this->assertEquals(1, $testJob->getId());
         $this->assertNull($testJob->getStackTrace());
         $this->assertNull($testJob->getMemoryUsage());
         $this->assertNull($testJob->getMemoryUsageReal());
@@ -24,8 +26,6 @@ class RunnerCommandTest extends BaseTest
         $output = $this->executeRunnerTest();
 
 
-        var_dump("adasdds");
-
-        return;
+        var_dump($output);
     }
 }

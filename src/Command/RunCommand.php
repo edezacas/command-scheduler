@@ -90,8 +90,12 @@ class RunCommand extends Command
                 break;
             }
 
+            $this->checkRunningJobs();
             $this->startJobs($maxJobs);
+        }
 
+        while (!empty($this->runningJobs)) {
+            sleep(5);
             $this->checkRunningJobs();
         }
 
