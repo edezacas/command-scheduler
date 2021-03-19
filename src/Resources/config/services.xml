@@ -11,5 +11,10 @@
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="doctrine" />
         </service>
+
+        <service id="EDC\CommandSchedulerBundle\EventSubscriber\ConsoleCommandSubscriber">
+            <argument type="service" id="doctrine" />
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>

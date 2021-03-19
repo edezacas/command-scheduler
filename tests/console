@@ -3,7 +3,7 @@
 
 require_once __DIR__.'/AppTestKernel.php';
 
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+use EDC\CommandSchedulerBundle\Console\Application;
 use EDC\CommandSchedulerBundle\Tests\AppTestKernel;
 
 $kernel = new AppTestKernel('test', true);

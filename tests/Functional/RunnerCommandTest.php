@@ -32,7 +32,9 @@ class RunnerCommandTest extends BaseTest
 
         $this->assertEquals(Job::STATE_FINISHED, $job->getState());
         $this->assertNotEmpty($job->getOutput());
+        $this->assertNotEmpty($job->getMemoryUsage());
         $this->assertEmpty($job->getErrorOutput());
+        $this->assertNull($job->getStackTrace());
     }
 
     public function testFailedRun()
@@ -56,5 +58,7 @@ class RunnerCommandTest extends BaseTest
         $this->assertEquals(Job::STATE_FAILED, $job->getState());
         $this->assertNotEmpty($job->getOutput());
         $this->assertNotEmpty($job->getErrorOutput());
+        $this->assertNotEmpty($job->getMemoryUsage());
+        $this->assertNotNull($job->getStackTrace());
     }
 }

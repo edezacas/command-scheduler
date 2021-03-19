@@ -18,6 +18,7 @@ call_user_func(
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use EDC\CommandSchedulerBundle\EDCCommandSchedulerBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -36,6 +37,7 @@ class AppTestKernel extends Kernel
         return [
             new FrameworkBundle(),
             new DoctrineBundle(),
+            new MonologBundle(),
             new EDCCommandSchedulerBundle(),
         ];
     }

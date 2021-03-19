@@ -58,6 +58,7 @@ class JobManager
         $em->flush();
 
         $args = $this->getBasicCommandLineArgs($env, $verbose);
+        $args[] = '--edc-job-id='.$job->getId();
         $args[] = $job->getCommand();
 
         foreach ($job->getArgs() as $arg) {
