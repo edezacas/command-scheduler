@@ -17,3 +17,7 @@ services:
     EDC\CommandSchedulerBundle\Tests\Command\TestCommand:
         tags:
             - { name: console.command }
+
+    EDC\CommandSchedulerBundle\Tests\Command\TestExceptionCommand:
+        tags:
+            - { name: console.command }

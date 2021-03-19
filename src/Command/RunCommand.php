@@ -133,11 +133,8 @@ class RunCommand extends Command
     private function checkRunningJobs()
     {
         foreach ($this->runningJobs as $i => &$data) {
-            $newOutput = substr($data['process']->getOutput(), $data['output_pointer']);
-            $data['output_pointer'] += strlen($newOutput);
-
-            $newErrorOutput = substr($data['process']->getErrorOutput(), $data['error_output_pointer']);
-            $data['error_output_pointer'] += strlen($newErrorOutput);
+            $newOutput = $data['process']->getIncrementalOutput();
+            $newErrorOutput = $data['process']->getIncrementalErrorOutput();
 
             if ($this->verbose) {
                 if (!empty($newOutput)) {
@@ -198,6 +195,11 @@ class RunCommand extends Command
             $data['job']->setRuntime(time() - $data['start_time']);
 
             $newState = 0 === $data['process']->getExitCode() ? Job::STATE_FINISHED : Job::STATE_FAILED;
+
+            if ($newState == Job::STATE_FAILED) {
+                //var_dump($data['process']);
+            }
+
             $this->jobManager->closeJob($data['job'], $newState);
             unset($this->runningJobs[$i]);
         }
