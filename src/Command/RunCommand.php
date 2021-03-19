@@ -205,6 +205,8 @@ class RunCommand extends Command
         if (empty($this->runningJobs)) {
             $this->finishRun = true;
         }
+
+        gc_collect_cycles();
     }
 
 }

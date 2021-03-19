@@ -110,16 +110,19 @@ class JobManager
 
     public function closeJob(Job $job, string $finalState)
     {
+        /**
+         * https://www.doctrine-project.org/projects/doctrine-orm/en/2.8/reference/transactions-and-concurrency.html
+         */
         $this->getJobManager()->getConnection()->beginTransaction();
 
         try {
             $this->updateJobState($job, $finalState);
             $this->getJobManager()->persist($job);
             $this->getJobManager()->flush();
-            $this->getJobManager()->clear(Job::class);
+            $this->getJobManager()->getConnection()->commit();
         } catch (\Exception $ex) {
             $this->getJobManager()->getConnection()->rollback();
-
+            $this->getJobManager()->clear(Job::class);
             throw $ex;
         }
     }
